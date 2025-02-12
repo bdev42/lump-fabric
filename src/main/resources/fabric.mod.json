@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "lump",
+  "version": "${version}",
+  "name": "Less Ugly Mob Proofing",
+  "description": "Non-intrusive torch-spam eradication since 2025.",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/lump/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.github.bdev42.lump.client.LumpClient"
+    ],
+    "main": [
+      "com.github.bdev42.lump.Lump"
+    ]
+  },
+  "mixins": [
+    "lump.mixins.json",
+    {
+      "config": "lump.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

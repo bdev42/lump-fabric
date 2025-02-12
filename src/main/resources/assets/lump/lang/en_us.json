@@ -1,0 +1,5 @@
+{
+  "block.lump.amethyst_beacon": "Amethyst Beacon",
+  "block.lump.amethyst_beacon.tooltip": "Range: %d m",
+  "block.lump.amethyst_beacon.tooltip.advanced": "Range: %d m (Horizontal)"
+}
