@@ -1,8 +1,6 @@
 package com.github.bdev42.lump.mixin;
 
 import com.github.bdev42.lump.Lump;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
