@@ -1,9 +1,12 @@
 package com.github.bdev42.lump.block;
 
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -15,6 +18,9 @@ public class ModBlocks {
     public static final Block AMETHYST_BEACON = registerWithPOI(identifier("amethyst_beacon"), new AmethystBeacon(), 0, AmethystBeacon.MAX_PROTECTION_DISTANCE);
 
     public static void initialize() {
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(
+                content -> content.addBefore(Items.TORCH, AMETHYST_BEACON.asItem())
+        );
     }
 
     private static <T extends Block> T registerBlock(Identifier identifier, T block) {

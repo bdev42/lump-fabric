@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " l ",
+    "l l",
+    "AgA"
+  ],
+  "key": {
+    "l": {
+      "item": "minecraft:leather"
+    },
+    "g": {
+      "item": "minecraft:gold_ingot"
+    },
+    "A": {
+      "item": "minecraft:amethyst_block"
+    }
+  },
+  "result": {
+    "id": "lump:amethyst_goggles"
+  }
+}

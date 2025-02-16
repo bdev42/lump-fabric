@@ -1,5 +1,6 @@
 {
   "block.lump.amethyst_beacon": "Amethyst Beacon",
   "block.lump.amethyst_beacon.tooltip": "Range: %d m",
-  "block.lump.amethyst_beacon.tooltip.advanced": "Range: %d m (Horizontal)"
+  "block.lump.amethyst_beacon.tooltip.advanced": "Range: %d m §8(Horizontal)",
+  "item.lump.amethyst_goggles": "Amethyst Goggles"
 }
