@@ -7,6 +7,6 @@ public class LumpClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(AmethystGogglesOverlay::renderEvent);
+        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(AmethystGogglesOverlayManager::onRenderEvent);
     }
 }
