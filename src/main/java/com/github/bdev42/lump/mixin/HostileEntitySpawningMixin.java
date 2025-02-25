@@ -1,6 +1,6 @@
 package com.github.bdev42.lump.mixin;
 
-import com.github.bdev42.lump.Lump;
+import com.github.bdev42.lump.block.AmethystBeacon;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
@@ -19,7 +19,7 @@ public class HostileEntitySpawningMixin {
     private static void lump_isSpawnDark(ServerWorldAccess world, BlockPos pos, Random random, CallbackInfoReturnable<Boolean> cir) {
         if (!world.getDimension().hasSkyLight()) return;
 
-        if (!Lump.hasAmethystBeaconInRange(world.toServerWorld(), pos)) return;
+        if (!AmethystBeacon.hasAmethystBeaconInRange(world.toServerWorld(), pos)) return;
 
         int ll = world.getLightLevel(LightType.SKY, pos);
         if (ll >= 15 || ll > world.getDimension().monsterSpawnBlockLightLimit()) {

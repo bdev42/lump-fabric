@@ -1,14 +1,14 @@
 package com.github.bdev42.lump;
 
-import com.github.bdev42.lump.block.AmethystBeacon;
 import com.github.bdev42.lump.block.ModBlocks;
 import com.github.bdev42.lump.item.ModItems;
+import com.github.bdev42.lump.networking.AmethystBeaconLocationsRequestHandler;
+import com.github.bdev42.lump.networking.AmethystBeaconLocationsRequest;
+import com.github.bdev42.lump.networking.AmethystBeaconLocationsResponse;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.server.world.ServerWorld;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.poi.PointOfInterestStorage;
 
 public class Lump implements ModInitializer {
     public static final String MOD_ID = "lump";
@@ -22,19 +22,13 @@ public class Lump implements ModInitializer {
     public void onInitialize() {
         ModBlocks.initialize();
         ModItems.initialize();
-    }
 
-    public static boolean hasAmethystBeaconInRange(ServerWorld world, BlockPos pos) {
-        int radius = AmethystBeacon.MAX_PROTECTION_DISTANCE;
-        double sd = radius * radius;
-        return world.getPointOfInterestStorage()
-                .getInSquare(
-                        poiType -> poiType.matchesId(identifier("amethyst_beacon")),
-                        pos,
-                        radius,
-                        PointOfInterestStorage.OccupationStatus.ANY
-                ).anyMatch(poi -> poi.getPos().getSquaredDistance(
-                        new Vec3i(pos.getX(), poi.getPos().getY(), pos.getZ())
-                ) <= sd);
+        PayloadTypeRegistry.playC2S().register(AmethystBeaconLocationsRequest.PACKET_ID, AmethystBeaconLocationsRequest.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(AmethystBeaconLocationsResponse.PACKET_ID, AmethystBeaconLocationsResponse.PACKET_CODEC);
+
+        ServerPlayNetworking.registerGlobalReceiver(
+                AmethystBeaconLocationsRequest.PACKET_ID,
+                AmethystBeaconLocationsRequestHandler::onRequest
+        );
     }
 }

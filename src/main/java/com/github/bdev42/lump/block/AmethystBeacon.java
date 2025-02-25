@@ -4,15 +4,20 @@ import net.minecraft.block.*;
 import net.minecraft.client.item.TooltipType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.text.Text;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.poi.PointOfInterestStorage;
 
 import java.util.List;
+
+import static com.github.bdev42.lump.Lump.identifier;
 
 public class AmethystBeacon extends Block {
     public static final int MAX_PROTECTION_DISTANCE = 128;
@@ -55,5 +60,19 @@ public class AmethystBeacon extends Block {
         tooltip.add(Text.translatable(
                 "block.lump.amethyst_beacon.tooltip" + (options.isAdvanced() ? ".advanced" : ""), MAX_PROTECTION_DISTANCE
         ));
+    }
+
+    public static boolean hasAmethystBeaconInRange(ServerWorld world, BlockPos pos) {
+        int radius = MAX_PROTECTION_DISTANCE;
+        double sd = radius * radius;
+        return world.getPointOfInterestStorage()
+                .getInSquare(
+                        poiType -> poiType.matchesId(identifier("amethyst_beacon")),
+                        pos,
+                        radius,
+                        PointOfInterestStorage.OccupationStatus.ANY
+                ).anyMatch(poi -> poi.getPos().getSquaredDistance(
+                        new Vec3i(pos.getX(), poi.getPos().getY(), pos.getZ())
+                ) <= sd);
     }
 }

@@ -1,4 +1,4 @@
-package com.github.bdev42.lump.client;
+package com.github.bdev42.lump.client.item;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
@@ -10,7 +10,7 @@ import org.joml.Matrix4f;
 
 import java.util.Map;
 
-import static com.github.bdev42.lump.client.AmethystGogglesOverlayManager.*;
+import static com.github.bdev42.lump.client.item.AmethystGogglesOverlayManager.*;
 
 public class AmethystGogglesOverlayRenderer {
     private static final int CLR_ALWAYS_SAFE = 0xFF00C000;
