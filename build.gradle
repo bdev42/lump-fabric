@@ -3,11 +3,11 @@ plugins {
     id 'maven-publish'
 }
 
-version = project.mod_version
+version = project.minecraft_version + "-" + project.mod_version
 group = project.maven_group
 
 base {
-    archivesName = project.archives_base_name + "-" + project.minecraft_version
+    archivesName = project.archives_base_name
 }
 
 loom {
