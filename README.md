@@ -1,4 +1,5 @@
 # Less Ugly Mob-Proofing
+[![Build CI](https://github.com/bdev42/lump-fabric/actions/workflows/gradle.yml/badge.svg)](https://github.com/bdev42/lump-fabric/actions/workflows/gradle.yml)  
 LUMP aims to **eradicate torch spam** around your base,  
 _**without affecting your mob grinders**_ or other farms.
 
