@@ -57,6 +57,12 @@ and as mentioned before _has_skylight_ must be **true** for the beacons to have 
 #### Light Overlay Accuracy
 The light overlay tests blocks for Creeper spawns specifically, this should be accurate for the vast majority of mobs in minecraft,
 but there might be some special cases here and there.
+#### Point Of Interest
+This mod uses the built-in PointOfInterestStorage just like lightning rods do for example, this means amethyst_beacons can also be found with the locate command:
+```
+/locate poi lump:amethyst_beacon
+```
+(It might be helpful if you want to measure the distance to the nearest beacon for example.)
 
 ## Gallery
 ![steve wearing amethyst goggles](images/gallery/gallery0.png) ![amethyst goggles in inventory](images/gallery/gallery1.png) 
