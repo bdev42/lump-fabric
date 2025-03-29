@@ -20,7 +20,7 @@ import java.util.*;
 
 public class AmethystGogglesOverlayManager {
     static final int UPDATE_TICKS_OVERLAY_CACHE = 20;
-    static final int UPDATE_TICKS_BEACON_POSITIONS = 100;
+    static final int UPDATE_TICKS_BEACON_POSITIONS = 40;
     // these bounds describe the margin around the player's subchunk in each direction
     // the total number of subchunks would be: (1 + 2*bound)^3 i.e. a bound of 1 means a 3x3x3 volume of subchunks
     static final int SUBCHUNK_BOUNDS_RENDER = 2;
@@ -82,17 +82,9 @@ public class AmethystGogglesOverlayManager {
         updateOverlayCache(world);
     }
 
-    public static void onUpdatedAmethystBeaconPositionsReceived(List<BlockPos> receivedPositions, ClientWorld world) {
-        // remove any beacons no longer present
-        knownBeaconPositions.removeIf(knownPos -> !receivedPositions.contains(knownPos));
-        // recompute cache subchunks within range of every newly discovered beacon
-        for (BlockPos beaconPos : receivedPositions) {
-            if (!knownBeaconPositions.add(beaconPos)) continue; //already known
-
-            ChunkSectionPos.stream(ChunkSectionPos.from(beaconPos), AmethystBeacon.MAX_PROTECTION_DISTANCE/16)
-                    .forEach(AmethystGogglesOverlayManager::invalidateOverlayCacheAt);
-        }
-        updateOverlayCache(world);
+    public static void onUpdatedAmethystBeaconPositionsReceived(List<BlockPos> receivedPositions) {
+        knownBeaconPositions.clear();
+        knownBeaconPositions.addAll(receivedPositions);
     }
 
     private static void updateAmethystBeaconPositions() {
