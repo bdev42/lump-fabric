@@ -4,6 +4,7 @@ import com.github.bdev42.lump.Lump;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.render.*;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Vec3d;
@@ -31,20 +32,21 @@ public class AmethystGogglesOverlayRenderer {
         return CLR_NEVER_SAFE;
     }
 
-    @SuppressWarnings("DataFlowIssue")
     public static void render(WorldRenderContext ctx, ChunkSectionPos playerSubchunkPos, Map<ChunkSectionPos, byte[]> overlayCache) {
-        ctx.matrixStack().push();
-        Tessellator tess = Tessellator.getInstance();
-        BufferBuilder buff = tess.getBuffer();
+        MatrixStack matrixStack = ctx.matrixStack();
+        if (matrixStack == null) return;
 
-        Matrix4f translationMatrix = ctx.matrixStack().peek().getPositionMatrix();
+        matrixStack.push();
+        Tessellator tess = Tessellator.getInstance();
+        BufferBuilder buff = tess.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+
+        Matrix4f translationMatrix = matrixStack.peek().getPositionMatrix();
         Vec3d cam = ctx.camera().getPos();
         translationMatrix.translate((float) -cam.x, (float) -cam.y + 0.005f, (float) -cam.z);
 
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
         RenderSystem.disableBlend();
         RenderSystem.enableDepthTest();
-        buff.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
 
         // for each subchunk inside the render bounds, loop through every block and draw overlays where necessary
         ChunkSectionPos.stream(playerSubchunkPos, Lump.CONFIG.subchunksRenderMargin()).forEach(subchunk -> {
@@ -61,14 +63,15 @@ public class AmethystGogglesOverlayRenderer {
             }
         });
 
-        tess.draw();
-        ctx.matrixStack().pop();
+        var builtBuff = buff.endNullable();
+        if (builtBuff != null) BufferRenderer.drawWithGlobalProgram(builtBuff);
+        matrixStack.pop();
     }
 
     private static void drawOverlay(BufferBuilder buff, Matrix4f matrix, BlockPos pos, int colorARGB) {
-        buff.vertex(matrix, pos.getX(), pos.getY(), pos.getZ()).color(colorARGB).next();
-        buff.vertex(matrix, pos.getX()+1, pos.getY(), pos.getZ()+1).color(colorARGB).next();
-        buff.vertex(matrix, pos.getX(), pos.getY(), pos.getZ()+1).color(colorARGB).next();
-        buff.vertex(matrix, pos.getX()+1, pos.getY(), pos.getZ()).color(colorARGB).next();
+        buff.vertex(matrix, pos.getX(), pos.getY(), pos.getZ()).color(colorARGB);
+        buff.vertex(matrix, pos.getX()+1, pos.getY(), pos.getZ()+1).color(colorARGB);
+        buff.vertex(matrix, pos.getX(), pos.getY(), pos.getZ()+1).color(colorARGB);
+        buff.vertex(matrix, pos.getX()+1, pos.getY(), pos.getZ()).color(colorARGB);
     }
 }

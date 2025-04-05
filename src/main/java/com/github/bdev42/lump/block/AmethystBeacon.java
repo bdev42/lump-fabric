@@ -2,9 +2,9 @@ package com.github.bdev42.lump.block;
 
 import com.github.bdev42.lump.Lump;
 import net.minecraft.block.*;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.text.Text;

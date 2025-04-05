@@ -1,10 +1,10 @@
 package com.github.bdev42.lump.item;
 
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
 
 import java.util.List;
@@ -12,10 +12,10 @@ import java.util.List;
 public class AmethystGoggles extends Item implements Equipment {
 
     public AmethystGoggles() {
-        this(new Settings().maxCount(1));
+        this(new net.minecraft.item.Item.Settings().maxCount(1));
     }
 
-    public AmethystGoggles(Settings settings) {
+    public AmethystGoggles(net.minecraft.item.Item.Settings settings) {
         super(settings);
     }
 
