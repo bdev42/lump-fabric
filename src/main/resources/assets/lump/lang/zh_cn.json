@@ -1,0 +1,12 @@
+{
+  "block.lump.amethyst_beacon": "紫水晶信标",
+  "block.lump.amethyst_beacon.tooltip": "范围: %d 米",
+  "block.lump.amethyst_beacon.tooltip.advanced": "范围: %d 米 §8(水平)",
+  "item.lump.amethyst_goggles": "紫水晶目镜",
+  "item.lump.amethyst_goggles.tooltip": "§o观察何处可生成实体",
+  "item.lump.amethyst_goggles.tooltip2.advanced": "§8颜色示意如下:",
+  "item.lump.amethyst_goggles.tooltip3.advanced": "§2总是安全",
+  "item.lump.amethyst_goggles.tooltip4.advanced": "§5信标安全",
+  "item.lump.amethyst_goggles.tooltip5.advanced": "§e日间安全",
+  "item.lump.amethyst_goggles.tooltip6.advanced": "§4并不安全"
+}

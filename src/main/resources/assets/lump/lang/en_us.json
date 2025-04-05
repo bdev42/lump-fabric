@@ -6,7 +6,7 @@
   "item.lump.amethyst_goggles.tooltip": "§oLets you see where mobs can spawn.",
   "item.lump.amethyst_goggles.tooltip2.advanced": "§8The colors mean the following:",
   "item.lump.amethyst_goggles.tooltip3.advanced": "§2ALWAYS SAFE",
-  "item.lump.amethyst_goggles.tooltip4.advanced": "§5SAFE WITH LUMP",
+  "item.lump.amethyst_goggles.tooltip4.advanced": "§5SAFE WITH BEACON",
   "item.lump.amethyst_goggles.tooltip5.advanced": "§eSAFE DURING DAY",
   "item.lump.amethyst_goggles.tooltip6.advanced": "§4NEVER SAFE"
 }
