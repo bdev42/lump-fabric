@@ -1,0 +1,12 @@
+{
+  "block.lump.amethyst_beacon": "Amethistbaken",
+  "block.lump.amethyst_beacon.tooltip": "Bereik: %d m",
+  "block.lump.amethyst_beacon.tooltip.advanced": "Bereik: %d m §8(Horizontaal)",
+  "item.lump.amethyst_goggles": "Amethistbril",
+  "item.lump.amethyst_goggles.tooltip": "§oLaat zien waar mobs kunnen spawnen.",
+  "item.lump.amethyst_goggles.tooltip2.advanced": "§8Betekenis van de kleuren:",
+  "item.lump.amethyst_goggles.tooltip3.advanced": "§2ALTIJD VEILIG",
+  "item.lump.amethyst_goggles.tooltip4.advanced": "§5VEILIG MET BAKEN",
+  "item.lump.amethyst_goggles.tooltip5.advanced": "§eVEILIG OVERDAG",
+  "item.lump.amethyst_goggles.tooltip6.advanced": "§4NOOIT VEILIG"
+}

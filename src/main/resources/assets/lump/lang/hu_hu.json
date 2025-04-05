@@ -1,0 +1,12 @@
+{
+  "block.lump.amethyst_beacon": "Ametiszt Jelzőfény",
+  "block.lump.amethyst_beacon.tooltip": "Hatótávolság: %d m",
+  "block.lump.amethyst_beacon.tooltip.advanced": "Hatótávolság: %d m §8(Vízszintesen mérve)",
+  "item.lump.amethyst_goggles": "Ametiszt Szemüveg",
+  "item.lump.amethyst_goggles.tooltip": "§oMegmutatja, hol spawnolhatnak a mobok.",
+  "item.lump.amethyst_goggles.tooltip2.advanced": "§8A színek jelentése a következő:",
+  "item.lump.amethyst_goggles.tooltip3.advanced": "§2MINDIG BIZTONSÁGOS",
+  "item.lump.amethyst_goggles.tooltip4.advanced": "§5JELZŐFÉNNYEL BIZTONSÁGOS",
+  "item.lump.amethyst_goggles.tooltip5.advanced": "§eNAPPAL BIZTONSÁGOS",
+  "item.lump.amethyst_goggles.tooltip6.advanced": "§4SOHASEM BIZTONSÁGOS"
+}
