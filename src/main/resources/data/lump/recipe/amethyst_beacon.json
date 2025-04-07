@@ -5,12 +5,8 @@
     " g "
   ],
   "key": {
-    "A": {
-      "item": "minecraft:amethyst_block"
-    },
-    "g": {
-      "item": "minecraft:gold_ingot"
-    }
+    "A": "minecraft:amethyst_block",
+    "g": "minecraft:gold_ingot"
   },
   "result": {
     "id": "lump:amethyst_beacon"

@@ -3,6 +3,7 @@ package com.github.bdev42.lump.client.item;
 import com.github.bdev42.lump.Lump;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
@@ -44,7 +45,7 @@ public class AmethystGogglesOverlayRenderer {
         Vec3d cam = ctx.camera().getPos();
         translationMatrix.translate((float) -cam.x, (float) -cam.y + 0.005f, (float) -cam.z);
 
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
         RenderSystem.disableBlend();
         RenderSystem.enableDepthTest();
 

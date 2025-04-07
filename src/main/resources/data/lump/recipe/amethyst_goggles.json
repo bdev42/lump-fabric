@@ -6,15 +6,9 @@
     "AgA"
   ],
   "key": {
-    "l": {
-      "item": "minecraft:leather"
-    },
-    "g": {
-      "item": "minecraft:gold_ingot"
-    },
-    "A": {
-      "item": "minecraft:amethyst_block"
-    }
+    "l": "minecraft:leather",
+    "g": "minecraft:gold_ingot",
+    "A": "minecraft:amethyst_block"
   },
   "result": {
     "id": "lump:amethyst_goggles"
