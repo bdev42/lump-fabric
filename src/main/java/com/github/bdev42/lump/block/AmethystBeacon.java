@@ -5,7 +5,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.text.Text;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
@@ -21,17 +20,6 @@ import static com.github.bdev42.lump.Lump.identifier;
 
 public class AmethystBeacon extends Block {
     public static final int MAX_PROTECTION_DISTANCE = 128;
-
-    public AmethystBeacon() {
-        this(AbstractBlock.Settings.create()
-                .strength(3f)
-                .requiresTool()
-                .mapColor(MapColor.PURPLE)
-                .sounds(BlockSoundGroup.AMETHYST_BLOCK)
-                .emissiveLighting(Blocks::always)
-                .luminance(ignored -> 3)
-        );
-    }
 
     public AmethystBeacon(Settings settings) {
         super(settings);

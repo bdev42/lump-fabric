@@ -14,6 +14,7 @@ import net.minecraft.entity.SpawnLocationTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.profiler.Profilers;
 import net.minecraft.world.LightType;
 
 import java.util.*;
@@ -70,9 +71,9 @@ public class AmethystGogglesOverlayManager {
     public static void onRenderEvent(WorldRenderContext context) {
         if (!overlayEnabled) return;
 
-        context.profiler().push("lumpOverlay");
+        Profilers.get().push("lumpOverlay");
         AmethystGogglesOverlayRenderer.render(context, prevSubchunkPos, overlayCache);
-        context.profiler().pop();
+        Profilers.get().pop();
     }
 
     private static void onPlayerChunkChanged(ClientPlayerEntity player, ClientWorld world) {

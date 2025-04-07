@@ -1,7 +1,5 @@
 package com.github.bdev42.lump.item;
 
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
@@ -9,19 +7,10 @@ import net.minecraft.text.Text;
 
 import java.util.List;
 
-public class AmethystGoggles extends Item implements Equipment {
-
-    public AmethystGoggles() {
-        this(new net.minecraft.item.Item.Settings().maxCount(1));
-    }
+public class AmethystGoggles extends Item  {
 
     public AmethystGoggles(net.minecraft.item.Item.Settings settings) {
         super(settings);
-    }
-
-    @Override
-    public EquipmentSlot getSlotType() {
-        return EquipmentSlot.HEAD;
     }
 
     @Override
