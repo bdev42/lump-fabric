@@ -43,8 +43,7 @@ public class AmethystBeacon extends Block {
         return shape;
     }
 
-    @Override
-    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
+    public static void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
         tooltip.add(Text.translatable(
                 "block.lump.amethyst_beacon.tooltip" + (options.isAdvanced() ? ".advanced" : ""), MAX_PROTECTION_DISTANCE
         ));

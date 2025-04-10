@@ -1,8 +1,10 @@
 package com.github.bdev42.lump.client.item;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.DepthTestFunction;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.minecraft.client.gl.ShaderProgramKeys;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
@@ -11,6 +13,7 @@ import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 
 import java.util.Map;
+import java.util.OptionalDouble;
 
 import static com.github.bdev42.lump.client.item.AmethystGogglesOverlayManager.*;
 
@@ -19,6 +22,22 @@ public class AmethystGogglesOverlayRenderer {
     private static final int CLR_LUMP_SAFE = 0xFFC000C0;
     private static final int CLR_DAYTIME_SAFE = 0xFFFFFF00;
     private static final int CLR_NEVER_SAFE = 0xFFFF0000;
+
+    public static final RenderPipeline DEBUG_LINES = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.POSITION_COLOR_SNIPPET)
+                    .withLocation("pipeline/debug_lines")
+                    .withVertexFormat(VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.DEBUG_LINES)
+                    .withCull(true)
+                    .withoutBlend()
+                    .withDepthTestFunction(DepthTestFunction.LEQUAL_DEPTH_TEST)
+                    .build()
+    );
+    private static final RenderLayer renderLayer = RenderLayer.of(
+            "debug_lines",
+            1536,
+            DEBUG_LINES,
+            RenderLayer.MultiPhaseParameters.builder().lineWidth(new RenderPhase.LineWidth(OptionalDouble.of(1))).build(false)
+    );
 
     private static int getColorFromData(byte data) {
         if ((data & F_BLOCK_LIT) == F_BLOCK_LIT) return CLR_ALWAYS_SAFE;
@@ -44,10 +63,6 @@ public class AmethystGogglesOverlayRenderer {
         Vec3d cam = ctx.camera().getPos();
         translationMatrix.translate((float) -cam.x, (float) -cam.y + 0.005f, (float) -cam.z);
 
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-        RenderSystem.disableBlend();
-        RenderSystem.enableDepthTest();
-
         // for each subchunk inside the render bounds, loop through every block and draw overlays where necessary
         ChunkSectionPos.stream(playerSubchunkPos, SUBCHUNK_BOUNDS_RENDER).forEach(subchunk -> {
             byte[] data = overlayCache.get(subchunk);
@@ -64,7 +79,7 @@ public class AmethystGogglesOverlayRenderer {
         });
 
         var builtBuff = buff.endNullable();
-        if (builtBuff != null) BufferRenderer.drawWithGlobalProgram(builtBuff);
+        if (builtBuff != null) renderLayer.draw(builtBuff);
         matrixStack.pop();
     }
 
