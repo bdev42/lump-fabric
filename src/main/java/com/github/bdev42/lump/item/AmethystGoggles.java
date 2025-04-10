@@ -13,8 +13,7 @@ public class AmethystGoggles extends Item  {
         super(settings);
     }
 
-    @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+    public static void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
         tooltip.add(Text.translatable("item.lump.amethyst_goggles.tooltip"));
         if (options.isAdvanced()) {
             tooltip.add(Text.empty());
