@@ -10,7 +10,7 @@ import static com.github.bdev42.lump.Lump.identifier;
 public class AmethystBeaconLocationsRequestHandler {
     public static void onRequest(AmethystBeaconLocationsRequest request, ServerPlayNetworking.Context context) {
         context.server().execute(() -> {
-            var poistore = context.player().getServerWorld().getPointOfInterestStorage();
+            var poistore = context.player().getWorld().getPointOfInterestStorage();
 
             var beacons = ChunkPos.stream(new ChunkPos(request.chunkX(), request.chunkZ()), request.radius())
                     .flatMap(chunkPos -> poistore.getInChunk(
