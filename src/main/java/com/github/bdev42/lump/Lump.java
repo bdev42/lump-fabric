@@ -1,6 +1,7 @@
 package com.github.bdev42.lump;
 
 import com.github.bdev42.lump.block.ModBlocks;
+import com.github.bdev42.lump.config.LumpConfig;
 import com.github.bdev42.lump.item.ModItems;
 import com.github.bdev42.lump.networking.AmethystBeaconLocationsRequestHandler;
 import com.github.bdev42.lump.networking.AmethystBeaconLocationsRequest;
@@ -17,6 +18,7 @@ public class Lump implements ModInitializer {
         return Identifier.of(MOD_ID, path);
     }
 
+    public static final LumpConfig CONFIG = LumpConfig.createAndLoad();
 
     @Override
     public void onInitialize() {

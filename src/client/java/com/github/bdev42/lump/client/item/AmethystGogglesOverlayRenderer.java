@@ -1,5 +1,6 @@
 package com.github.bdev42.lump.client.item;
 
+import com.github.bdev42.lump.Lump;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.render.*;
@@ -46,7 +47,7 @@ public class AmethystGogglesOverlayRenderer {
         buff.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
 
         // for each subchunk inside the render bounds, loop through every block and draw overlays where necessary
-        ChunkSectionPos.stream(playerSubchunkPos, SUBCHUNK_BOUNDS_RENDER).forEach(subchunk -> {
+        ChunkSectionPos.stream(playerSubchunkPos, Lump.CONFIG.subchunksRenderMargin()).forEach(subchunk -> {
             byte[] data = overlayCache.get(subchunk);
             if (data == null) return;
 

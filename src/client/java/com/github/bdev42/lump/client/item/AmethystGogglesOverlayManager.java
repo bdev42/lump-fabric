@@ -1,6 +1,6 @@
 package com.github.bdev42.lump.client.item;
 
-import com.github.bdev42.lump.block.AmethystBeacon;
+import com.github.bdev42.lump.Lump;
 import com.github.bdev42.lump.item.ModItems;
 import com.github.bdev42.lump.networking.AmethystBeaconLocationsRequest;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -19,13 +19,6 @@ import net.minecraft.world.LightType;
 import java.util.*;
 
 public class AmethystGogglesOverlayManager {
-    static final int UPDATE_TICKS_OVERLAY_CACHE = 20;
-    static final int UPDATE_TICKS_BEACON_POSITIONS = 40;
-    // these bounds describe the margin around the player's subchunk in each direction
-    // the total number of subchunks would be: (1 + 2*bound)^3 i.e. a bound of 1 means a 3x3x3 volume of subchunks
-    static final int SUBCHUNK_BOUNDS_RENDER = 2;
-    static final int SUBCHUNK_BOUNDS_CACHE = SUBCHUNK_BOUNDS_RENDER+1;
-
     static final byte F_BLOCK_SPAWNABLE = 1;
     static final byte F_BLOCK_LIT = 1 << 1;
     static final byte F_SKY_LIT = 1 << 2;
@@ -57,12 +50,12 @@ public class AmethystGogglesOverlayManager {
         // and remove the subchunks now out of range so we do not leak memory
         if (!ChunkSectionPos.from(player).equals(prevSubchunkPos)) onPlayerChunkChanged(player, world);
         // since updating the beacon positions involves a request to the server it will happen once every n ticks
-        if (tickCounter % UPDATE_TICKS_BEACON_POSITIONS == 0) updateAmethystBeaconPositions();
+        if (tickCounter % Lump.CONFIG.ticksPerBeaconPositionsUpdate() == 0) updateAmethystBeaconPositions();
         // on the other hand updating the overlay all at once would cause visible lag spikes,
         // so we need to spread out the work so that a full update completes every n ticks
         invalidateOverlayCachePartByPart(
-                tickCounter, UPDATE_TICKS_OVERLAY_CACHE,
-                prevSubchunkPos, SUBCHUNK_BOUNDS_RENDER
+                tickCounter, Lump.CONFIG.ticksPerOverlayCacheUpdate(),
+                prevSubchunkPos, Lump.CONFIG.subchunksRenderMargin()
         );
         updateOverlayCache(world);
     }
@@ -92,7 +85,7 @@ public class AmethystGogglesOverlayManager {
         ClientPlayNetworking.send(new AmethystBeaconLocationsRequest(
                 prevSubchunkPos.getSectionX(),
                 prevSubchunkPos.getSectionZ(),
-                AmethystBeacon.MAX_PROTECTION_DISTANCE/16
+                Lump.CONFIG.beaconProtectionRadius()/16
         ));
     }
 
@@ -101,11 +94,11 @@ public class AmethystGogglesOverlayManager {
         overlayCache.keySet().removeIf(chunkSectionPos -> !checkSubchunkBounds(
                 chunkSectionPos,
                 prevSubchunkPos,
-                SUBCHUNK_BOUNDS_CACHE
+                Lump.CONFIG.subchunksCacheMargin()
         ));
 
         // loop through all chunks in the cache bounds, if no cached data is present generate it
-        ChunkSectionPos.stream(prevSubchunkPos, SUBCHUNK_BOUNDS_CACHE).forEach(subchunk -> {
+        ChunkSectionPos.stream(prevSubchunkPos, Lump.CONFIG.subchunksCacheMargin()).forEach(subchunk -> {
             if (overlayCache.containsKey(subchunk)) return;
 
             byte[] data = new byte[16*16*16];
@@ -121,7 +114,7 @@ public class AmethystGogglesOverlayManager {
                 if (world.getLightLevel(LightType.BLOCK, pos) > monsterSpawnLightLevel) data[i] |= F_BLOCK_LIT;
                 if (hasSkylight && world.getLightLevel(LightType.SKY, pos) > monsterSpawnLightLevel) data[i] |= F_SKY_LIT;
 
-                if (hasKnownBeaconInRange(pos, AmethystBeacon.MAX_PROTECTION_DISTANCE)) data[i] |= F_BEACON_IN_RANGE;
+                if (hasKnownBeaconInRange(pos, Lump.CONFIG.beaconProtectionRadius())) data[i] |= F_BEACON_IN_RANGE;
             }
 
             overlayCache.put(subchunk, data);

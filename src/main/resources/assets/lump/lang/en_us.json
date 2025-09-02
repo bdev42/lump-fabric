@@ -8,5 +8,17 @@
   "item.lump.amethyst_goggles.tooltip3.advanced": "§2ALWAYS SAFE",
   "item.lump.amethyst_goggles.tooltip4.advanced": "§5SAFE WITH BEACON",
   "item.lump.amethyst_goggles.tooltip5.advanced": "§eSAFE DURING DAY",
-  "item.lump.amethyst_goggles.tooltip6.advanced": "§4NEVER SAFE"
+  "item.lump.amethyst_goggles.tooltip6.advanced": "§4NEVER SAFE",
+  "text.config.lump-config.title": "Less Ugly Mob Proofing Settings",
+  "text.config.lump-config.option.beaconProtectionRadius": "Amethyst Beacon Protection Radius",
+  "text.config.lump-config.option.beaconProtectionRadius.tooltip": "Sets the effective range of the §5Amethyst Beacons§r, \nnote that §nthis value is controlled by the server§r, \nchanging it in this menu only applies to §esingleplayer§r.",
+  "text.config.lump-config.section.light-overlay": "Light Overlay (Amethyst Goggles)",
+  "text.config.lump-config.option.subchunksRenderMargin": "Subchunks Render Distance",
+  "text.config.lump-config.option.subchunksRenderMargin.tooltip": "How many subchunks around the player will \nthe light overlay be shown for (in all directions).",
+  "text.config.lump-config.option.subchunksCacheMargin": "Subchunks Cache Distance",
+  "text.config.lump-config.option.subchunksCacheMargin.tooltip": "How many subchunks around the player will \nthe light overlay be calculated for. \nShould be §nat least equal to the render distance§r above. \n§7§o(Calculating a larger area in advance helps reduce \nnewly loaded chunks from showing the wrong overlay color \nfor a moment, while the player is moving between chunks.)§r",
+  "text.config.lump-config.option.ticksPerOverlayCacheUpdate": "Ticks per Overlay Update",
+  "text.config.lump-config.option.ticksPerOverlayCacheUpdate.tooltip": "Lower values are more demanding, but makes \nthe overlay more responsive for light updates.\n§7§oIncrease for better performance.§r",
+  "text.config.lump-config.option.ticksPerBeaconPositionsUpdate": "Ticks per Beacon Position Update",
+  "text.config.lump-config.option.ticksPerBeaconPositionsUpdate.tooltip": "Lower values are more demanding, but makes the \noverlay more responsive when placing or breaking beacons. \n§7§oIncrease for better performance, especially for multiplayer.§r"
 }

@@ -1,5 +1,6 @@
 package com.github.bdev42.lump.block;
 
+import com.github.bdev42.lump.Lump;
 import net.minecraft.block.*;
 import net.minecraft.client.item.TooltipType;
 import net.minecraft.item.Item;
@@ -20,7 +21,6 @@ import java.util.List;
 import static com.github.bdev42.lump.Lump.identifier;
 
 public class AmethystBeacon extends Block {
-    public static final int MAX_PROTECTION_DISTANCE = 128;
 
     public AmethystBeacon() {
         this(AbstractBlock.Settings.create()
@@ -58,12 +58,12 @@ public class AmethystBeacon extends Block {
     @Override
     public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
         tooltip.add(Text.translatable(
-                "block.lump.amethyst_beacon.tooltip" + (options.isAdvanced() ? ".advanced" : ""), MAX_PROTECTION_DISTANCE
+                "block.lump.amethyst_beacon.tooltip" + (options.isAdvanced() ? ".advanced" : ""), Lump.CONFIG.beaconProtectionRadius()
         ));
     }
 
     public static boolean hasAmethystBeaconInRange(ServerWorld world, BlockPos pos) {
-        int radius = MAX_PROTECTION_DISTANCE;
+        int radius = Lump.CONFIG.beaconProtectionRadius();
         double sd = radius * radius;
         return world.getPointOfInterestStorage()
                 .getInSquare(

@@ -1,5 +1,6 @@
 package com.github.bdev42.lump.block;
 
+import com.github.bdev42.lump.Lump;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.minecraft.block.Block;
@@ -15,7 +16,7 @@ import static com.github.bdev42.lump.Lump.identifier;
 
 @SuppressWarnings({"SameParameterValue", "UnusedReturnValue"})
 public class ModBlocks {
-    public static final Block AMETHYST_BEACON = registerWithPOI(identifier("amethyst_beacon"), new AmethystBeacon(), 0, AmethystBeacon.MAX_PROTECTION_DISTANCE);
+    public static final Block AMETHYST_BEACON = registerWithPOI(identifier("amethyst_beacon"), new AmethystBeacon(), 0, Lump.CONFIG.beaconProtectionRadius());
 
     public static void initialize() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(
