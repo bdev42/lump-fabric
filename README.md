@@ -48,6 +48,9 @@ When advanced tooltips are enabled (F3 + H), the item shows **the legend for the
 #### Beacon Range
 The range of the beacon is calculated horizontally, the height (y axis) is ignored.  
 (This effectively means that the _"Area of Effect"_ for the beacons is shaped like a cylinder.)
+
+_From `0.3.0` the range can be configured using the in game mod menu, or by manually changing the `"beaconProtectionRadius"` inside `lump-config.json5`_
+
 #### Dimension Support
 The beacons should work fine in _any dimension with skylight_, this means that out of the vanilla dimensions **the mod is only effective in the overworld**.
 
