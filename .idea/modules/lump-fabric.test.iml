@@ -4,6 +4,7 @@
     <facet type="minecraft" name="Minecraft">
       <configuration>
         <autoDetectTypes>
+          <platformType>ARCHITECTURY</platformType>
           <platformType>FABRIC</platformType>
           <platformType>MIXIN</platformType>
           <platformType>MCP</platformType>
@@ -13,6 +14,6 @@
     </facet>
   </component>
   <component name="McpModuleSettings">
-    <option name="minecraftVersion" value="1.21.6" />
+    <option name="minecraftVersion" value="1.21.9" />
   </component>
 </module>

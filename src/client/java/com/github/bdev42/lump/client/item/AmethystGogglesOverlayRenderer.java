@@ -4,7 +4,6 @@ import com.github.bdev42.lump.Lump;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
@@ -52,8 +51,7 @@ public class AmethystGogglesOverlayRenderer {
         return CLR_NEVER_SAFE;
     }
 
-    public static void render(WorldRenderContext ctx, ChunkSectionPos playerSubchunkPos, Map<ChunkSectionPos, byte[]> overlayCache) {
-        MatrixStack matrixStack = ctx.matrixStack();
+    public static void render(MatrixStack matrixStack, Vec3d cam, ChunkSectionPos playerSubchunkPos, Map<ChunkSectionPos, byte[]> overlayCache) {
         if (matrixStack == null) return;
 
         matrixStack.push();
@@ -61,7 +59,6 @@ public class AmethystGogglesOverlayRenderer {
         BufferBuilder buff = tess.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
 
         Matrix4f translationMatrix = matrixStack.peek().getPositionMatrix();
-        Vec3d cam = ctx.camera().getPos();
         translationMatrix.translate((float) -cam.x, (float) -cam.y + 0.005f, (float) -cam.z);
 
         // for each subchunk inside the render bounds, loop through every block and draw overlays where necessary
@@ -73,7 +70,7 @@ public class AmethystGogglesOverlayRenderer {
                 if ((data[i] & F_BLOCK_SPAWNABLE) == 0) continue;
 
                 BlockPos pos = subchunk.unpackBlockPos(i);
-                if (ctx.camera().getPos().y < pos.getY()) continue;
+                if (cam.y < pos.getY()) continue;
 
                 drawOverlay(buff, translationMatrix, pos, getColorFromData(data[i]));
             }
