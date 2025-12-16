@@ -4,6 +4,7 @@ import com.github.bdev42.lump.Lump;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
@@ -13,7 +14,6 @@ import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 
 import java.util.Map;
-import java.util.OptionalDouble;
 
 import static com.github.bdev42.lump.client.item.AmethystGogglesOverlayManager.*;
 
@@ -34,9 +34,7 @@ public class AmethystGogglesOverlayRenderer {
     );
     private static final RenderLayer renderLayer = RenderLayer.of(
             "debug_lines",
-            1536,
-            DEBUG_LINES,
-            RenderLayer.MultiPhaseParameters.builder().lineWidth(new RenderPhase.LineWidth(OptionalDouble.of(1))).build(false)
+            RenderSetup.builder(DEBUG_LINES).build()
     );
 
     private static int getColorFromData(byte data) {
@@ -51,8 +49,9 @@ public class AmethystGogglesOverlayRenderer {
         return CLR_NEVER_SAFE;
     }
 
-    public static void render(MatrixStack matrixStack, Vec3d cam, ChunkSectionPos playerSubchunkPos, Map<ChunkSectionPos, byte[]> overlayCache) {
-        if (matrixStack == null) return;
+    public static void render(WorldRenderContext context, ChunkSectionPos playerSubchunkPos, Map<ChunkSectionPos, byte[]> overlayCache) {
+        MatrixStack matrixStack = context.matrices();
+        Vec3d cam = context.worldState().cameraRenderState.pos;
 
         matrixStack.push();
         Tessellator tess = Tessellator.getInstance();

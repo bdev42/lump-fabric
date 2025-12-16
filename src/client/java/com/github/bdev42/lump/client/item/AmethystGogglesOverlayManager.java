@@ -4,16 +4,15 @@ import com.github.bdev42.lump.Lump;
 import com.github.bdev42.lump.item.ModItems;
 import com.github.bdev42.lump.networking.AmethystBeaconLocationsRequest;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.SpawnLocationTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.profiler.Profilers;
 import net.minecraft.world.LightType;
@@ -62,11 +61,11 @@ public class AmethystGogglesOverlayManager {
         updateOverlayCache(world);
     }
 
-    public static void onRenderEvent(MatrixStack matrixStack, Vec3d cameraPos) {
+    public static void onRenderEvent(WorldRenderContext context) {
         if (!overlayEnabled) return;
 
         Profilers.get().push("lumpOverlay");
-        AmethystGogglesOverlayRenderer.render(matrixStack, cameraPos, prevSubchunkPos, overlayCache);
+        AmethystGogglesOverlayRenderer.render(context, prevSubchunkPos, overlayCache);
         Profilers.get().pop();
     }
 
