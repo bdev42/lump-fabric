@@ -1,11 +1,13 @@
 package com.github.bdev42.lump;
 
 import com.github.bdev42.lump.block.ModBlocks;
-import com.github.bdev42.lump.config.LumpConfig;
+import com.github.bdev42.lump.config.LumpConfigModel;
 import com.github.bdev42.lump.item.ModItems;
 import com.github.bdev42.lump.networking.AmethystBeaconLocationsRequestHandler;
 import com.github.bdev42.lump.networking.AmethystBeaconLocationsRequest;
 import com.github.bdev42.lump.networking.AmethystBeaconLocationsResponse;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -18,10 +20,13 @@ public class Lump implements ModInitializer {
         return Identifier.of(MOD_ID, path);
     }
 
-    public static final LumpConfig CONFIG = LumpConfig.createAndLoad();
+    public static LumpConfigModel CONFIG;
 
     @Override
     public void onInitialize() {
+        AutoConfig.register(LumpConfigModel.class, JanksonConfigSerializer::new);
+        CONFIG = AutoConfig.getConfigHolder(LumpConfigModel.class).getConfig();
+
         ModBlocks.initialize();
         ModItems.initialize();
 

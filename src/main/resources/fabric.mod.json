@@ -18,6 +18,9 @@
     ],
     "main": [
       "com.github.bdev42.lump.Lump"
+    ],
+    "modmenu": [
+      "com.github.bdev42.lump.client.ModMenuIntegration"
     ]
   },
   "mixins": [
@@ -31,7 +34,7 @@
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
     "minecraft": ">=${minecraft_version}",
-    "owo": ">=${owo_version}"
+    "cloth-config": ">=${cloth_version}"
   },
   "suggests": {
     "modmenu": "*"
