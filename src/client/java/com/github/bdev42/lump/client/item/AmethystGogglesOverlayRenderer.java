@@ -1,17 +1,12 @@
 package com.github.bdev42.lump.client.item;
 
 import com.github.bdev42.lump.Lump;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.DepthTestFunction;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix4f;
+import net.minecraft.world.debug.gizmo.GizmoDrawing;
 
 import java.util.Map;
 
@@ -22,20 +17,6 @@ public class AmethystGogglesOverlayRenderer {
     private static final int CLR_LUMP_SAFE = 0xFFC000C0;
     private static final int CLR_DAYTIME_SAFE = 0xFFFFFF00;
     private static final int CLR_NEVER_SAFE = 0xFFFF0000;
-
-    public static final RenderPipeline DEBUG_LINES = RenderPipelines.register(
-            RenderPipeline.builder(RenderPipelines.POSITION_COLOR_SNIPPET)
-                    .withLocation("pipeline/debug_lines")
-                    .withVertexFormat(VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.DEBUG_LINES)
-                    .withCull(true)
-                    .withoutBlend()
-                    .withDepthTestFunction(DepthTestFunction.LEQUAL_DEPTH_TEST)
-                    .build()
-    );
-    private static final RenderLayer renderLayer = RenderLayer.of(
-            "debug_lines",
-            RenderSetup.builder(DEBUG_LINES).build()
-    );
 
     private static int getColorFromData(byte data) {
         if ((data & F_BLOCK_LIT) == F_BLOCK_LIT) return CLR_ALWAYS_SAFE;
@@ -50,15 +31,8 @@ public class AmethystGogglesOverlayRenderer {
     }
 
     public static void render(WorldRenderContext context, ChunkSectionPos playerSubchunkPos, Map<ChunkSectionPos, byte[]> overlayCache) {
-        MatrixStack matrixStack = context.matrices();
+        if (context.worldState() == null) return;
         Vec3d cam = context.worldState().cameraRenderState.pos;
-
-        matrixStack.push();
-        Tessellator tess = Tessellator.getInstance();
-        BufferBuilder buff = tess.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
-
-        Matrix4f translationMatrix = matrixStack.peek().getPositionMatrix();
-        translationMatrix.translate((float) -cam.x, (float) -cam.y + 0.005f, (float) -cam.z);
 
         // for each subchunk inside the render bounds, loop through every block and draw overlays where necessary
         ChunkSectionPos.stream(playerSubchunkPos, Lump.CONFIG.subchunksRenderMargin()).forEach(subchunk -> {
@@ -71,19 +45,13 @@ public class AmethystGogglesOverlayRenderer {
                 BlockPos pos = subchunk.unpackBlockPos(i);
                 if (cam.y < pos.getY()) continue;
 
-                drawOverlay(buff, translationMatrix, pos, getColorFromData(data[i]));
+                drawOverlay(pos, getColorFromData(data[i]));
             }
         });
-
-        var builtBuff = buff.endNullable();
-        if (builtBuff != null) renderLayer.draw(builtBuff);
-        matrixStack.pop();
     }
 
-    private static void drawOverlay(BufferBuilder buff, Matrix4f matrix, BlockPos pos, int colorARGB) {
-        buff.vertex(matrix, pos.getX(), pos.getY(), pos.getZ()).color(colorARGB);
-        buff.vertex(matrix, pos.getX()+1, pos.getY(), pos.getZ()+1).color(colorARGB);
-        buff.vertex(matrix, pos.getX(), pos.getY(), pos.getZ()+1).color(colorARGB);
-        buff.vertex(matrix, pos.getX()+1, pos.getY(), pos.getZ()).color(colorARGB);
+    private static void drawOverlay(BlockPos pos, int colorARGB) {
+        GizmoDrawing.line(new Vec3d(pos.getX(), pos.getY(), pos.getZ()), new Vec3d(pos.getX()+1, pos.getY(), pos.getZ()+1), colorARGB, 1);
+        GizmoDrawing.line(new Vec3d(pos.getX(), pos.getY(), pos.getZ()+1), new Vec3d(pos.getX()+1, pos.getY(), pos.getZ()), colorARGB, 1);
     }
 }
