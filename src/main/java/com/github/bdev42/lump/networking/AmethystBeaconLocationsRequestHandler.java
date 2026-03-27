@@ -1,24 +1,24 @@
 package com.github.bdev42.lump.networking;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.poi.PointOfInterest;
-import net.minecraft.world.poi.PointOfInterestStorage;
+import net.minecraft.world.entity.ai.village.poi.PoiManager;
+import net.minecraft.world.entity.ai.village.poi.PoiRecord;
+import net.minecraft.world.level.ChunkPos;
 
 import static com.github.bdev42.lump.Lump.identifier;
 
 public class AmethystBeaconLocationsRequestHandler {
     public static void onRequest(AmethystBeaconLocationsRequest request, ServerPlayNetworking.Context context) {
         context.server().execute(() -> {
-            var poistore = context.player().getEntityWorld().getPointOfInterestStorage();
+            var poistore = context.player().level().getPoiManager();
 
-            var beacons = ChunkPos.stream(new ChunkPos(request.chunkX(), request.chunkZ()), request.radius())
+            var beacons = ChunkPos.rangeClosed(new ChunkPos(request.chunkX(), request.chunkZ()), request.radius())
                     .flatMap(chunkPos -> poistore.getInChunk(
-                            poiType -> poiType.matchesId(identifier("amethyst_beacon")),
+                            poiType -> poiType.is(identifier("amethyst_beacon")),
                             chunkPos,
-                            PointOfInterestStorage.OccupationStatus.ANY
+                            PoiManager.Occupancy.ANY
                     ))
-                    .map(PointOfInterest::getPos)
+                    .map(PoiRecord::getPos)
                     .toList();
 
             context.responseSender().sendPacket(new AmethystBeaconLocationsResponse(beacons));

@@ -9,13 +9,13 @@ import com.github.bdev42.lump.networking.AmethystBeaconLocationsResponse;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 
 public class Lump implements ModInitializer {
     public static final String MOD_ID = "lump";
 
     public static Identifier identifier(String path) {
-        return Identifier.of(MOD_ID, path);
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 
     public static final LumpConfig CONFIG = LumpConfig.createAndLoad();

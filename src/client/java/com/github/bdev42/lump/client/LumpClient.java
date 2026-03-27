@@ -18,9 +18,9 @@ public class LumpClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ItemTooltipCallback.EVENT.register((stack, context, options, tooltip) -> {
-            if (stack.isOf(ModItems.AMETHYST_GOGGLES)) {
+            if (stack.is(ModItems.AMETHYST_GOGGLES)) {
                 AmethystGoggles.appendTooltip(stack, context, tooltip, options);
-            } else if (stack.isOf(ModBlocks.AMETHYST_BEACON.asItem())) {
+            } else if (stack.is(ModBlocks.AMETHYST_BEACON.asItem())) {
                 AmethystBeacon.appendTooltip(stack, context, tooltip, options);
             }
         });
