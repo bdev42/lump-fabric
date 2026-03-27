@@ -5,17 +5,17 @@ import com.github.bdev42.lump.item.ModItems;
 import com.github.bdev42.lump.networking.AmethystBeaconLocationsRequest;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.SpawnLocationTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkSectionPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.profiler.Profilers;
-import net.minecraft.world.LightType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.util.profiling.Profiler;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.SpawnPlacementTypes;
+import net.minecraft.world.level.LightLayer;
 
 import java.util.*;
 
@@ -25,15 +25,15 @@ public class AmethystGogglesOverlayManager {
     static final byte F_SKY_LIT = 1 << 2;
     static final byte F_BEACON_IN_RANGE = 1 << 3;
 
-    private static ChunkSectionPos prevSubchunkPos;
+    private static SectionPos prevSubchunkPos;
     private static final Set<BlockPos> knownBeaconPositions = new HashSet<>();
-    private static final Map<ChunkSectionPos, byte[]> overlayCache = new HashMap<>();
+    private static final Map<SectionPos, byte[]> overlayCache = new HashMap<>();
 
     private static int tickCounter = 0;
     private static boolean overlayEnabled = false;
 
-    public static void onClientTickEvent(ClientWorld world) {
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+    public static void onClientTickEvent(ClientLevel world) {
+        LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
         // toggle the overlay based on if the player is wearing the goggles or not
         if(overlayEnabled != isWearingGoggles(player)) {
@@ -49,7 +49,7 @@ public class AmethystGogglesOverlayManager {
 
         // when the player changes their subchunk we need to add all the new subchunks now in range
         // and remove the subchunks now out of range so we do not leak memory
-        if (!ChunkSectionPos.from(player).equals(prevSubchunkPos)) onPlayerChunkChanged(player, world);
+        if (!SectionPos.of(player).equals(prevSubchunkPos)) onPlayerChunkChanged(player, world);
         // since updating the beacon positions involves a request to the server it will happen once every n ticks
         if (tickCounter % Lump.CONFIG.ticksPerBeaconPositionsUpdate() == 0) updateAmethystBeaconPositions();
         // on the other hand updating the overlay all at once would cause visible lag spikes,
@@ -64,13 +64,13 @@ public class AmethystGogglesOverlayManager {
     public static void onRenderEvent(WorldRenderContext context) {
         if (!overlayEnabled) return;
 
-        Profilers.get().push("lumpOverlay");
+        Profiler.get().push("lumpOverlay");
         AmethystGogglesOverlayRenderer.render(context, prevSubchunkPos, overlayCache);
-        Profilers.get().pop();
+        Profiler.get().pop();
     }
 
-    private static void onPlayerChunkChanged(ClientPlayerEntity player, ClientWorld world) {
-        prevSubchunkPos = ChunkSectionPos.from(player);
+    private static void onPlayerChunkChanged(LocalPlayer player, ClientLevel world) {
+        prevSubchunkPos = SectionPos.of(player);
 
         updateAmethystBeaconPositions();
         updateOverlayCache(world);
@@ -84,13 +84,13 @@ public class AmethystGogglesOverlayManager {
     private static void updateAmethystBeaconPositions() {
         // request amethyst beacon positions
         ClientPlayNetworking.send(new AmethystBeaconLocationsRequest(
-                prevSubchunkPos.getSectionX(),
-                prevSubchunkPos.getSectionZ(),
+                prevSubchunkPos.x(),
+                prevSubchunkPos.z(),
                 Lump.CONFIG.beaconProtectionRadius()/16
         ));
     }
 
-    private static void updateOverlayCache(ClientWorld world) {
+    private static void updateOverlayCache(ClientLevel world) {
         // loop through all cached chunks, remove everything now outside the caching bounds
         overlayCache.keySet().removeIf(chunkSectionPos -> !checkSubchunkBounds(
                 chunkSectionPos,
@@ -99,21 +99,21 @@ public class AmethystGogglesOverlayManager {
         ));
 
         // loop through all chunks in the cache bounds, if no cached data is present generate it
-        ChunkSectionPos.stream(prevSubchunkPos, Lump.CONFIG.subchunksCacheMargin()).forEach(subchunk -> {
+        SectionPos.cube(prevSubchunkPos, Lump.CONFIG.subchunksCacheMargin()).forEach(subchunk -> {
             if (overlayCache.containsKey(subchunk)) return;
 
             byte[] data = new byte[16*16*16];
 
-            int monsterSpawnLightLevel = world.getDimension().monsterSpawnBlockLightLimit();
-            boolean hasSkylight = world.getDimension().hasSkyLight();
+            int monsterSpawnLightLevel = world.dimensionType().monsterSpawnBlockLightLimit();
+            boolean hasSkylight = world.dimensionType().hasSkyLight();
 
             for (short i = 0; i < data.length; i++) {
-                BlockPos pos = subchunk.unpackBlockPos(i);
+                BlockPos pos = subchunk.relativeToBlockPos(i);
 
-                if (SpawnLocationTypes.ON_GROUND.isSpawnPositionOk(world, pos, EntityType.CREEPER)) data[i] |= F_BLOCK_SPAWNABLE;
+                if (SpawnPlacementTypes.ON_GROUND.isSpawnPositionOk(world, pos, EntityType.CREEPER)) data[i] |= F_BLOCK_SPAWNABLE;
 
-                if (world.getLightLevel(LightType.BLOCK, pos) > monsterSpawnLightLevel) data[i] |= F_BLOCK_LIT;
-                if (hasSkylight && world.getLightLevel(LightType.SKY, pos) > monsterSpawnLightLevel) data[i] |= F_SKY_LIT;
+                if (world.getBrightness(LightLayer.BLOCK, pos) > monsterSpawnLightLevel) data[i] |= F_BLOCK_LIT;
+                if (hasSkylight && world.getBrightness(LightLayer.SKY, pos) > monsterSpawnLightLevel) data[i] |= F_SKY_LIT;
 
                 if (hasKnownBeaconInRange(pos, Lump.CONFIG.beaconProtectionRadius())) data[i] |= F_BEACON_IN_RANGE;
             }
@@ -122,7 +122,7 @@ public class AmethystGogglesOverlayManager {
         });
     }
 
-    private static void invalidateOverlayCachePartByPart(int part, int maxPart, ChunkSectionPos center, int bounds) {
+    private static void invalidateOverlayCachePartByPart(int part, int maxPart, SectionPos center, int bounds) {
         int size = 1 + 2*bounds;
         int per_tick = size*size*size / maxPart + 1;
         int current_tick = per_tick * (part % maxPart);
@@ -130,33 +130,33 @@ public class AmethystGogglesOverlayManager {
             int y = i / (size*size) - bounds;
             int z = (i / size) % size - bounds;
             int x = i % size - bounds;
-            invalidateOverlayCacheAt(center.add(x, y, z));
+            invalidateOverlayCacheAt(center.offset(x, y, z));
         }
     }
 
-    private static void invalidateOverlayCacheAt(ChunkSectionPos subchunk) {
+    private static void invalidateOverlayCacheAt(SectionPos subchunk) {
         overlayCache.remove(subchunk);
     }
 
-    private static boolean isWearingGoggles(ClientPlayerEntity player) {
-        return player.getEquippedStack(EquipmentSlot.HEAD).isOf(ModItems.AMETHYST_GOGGLES);
+    private static boolean isWearingGoggles(LocalPlayer player) {
+        return player.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.AMETHYST_GOGGLES);
     }
 
-    private static boolean checkSubchunkBounds(ChunkSectionPos pos, ChunkSectionPos center, int bound) {
-        int x = pos.getSectionX();
-        int z = pos.getSectionZ();
-        int y = pos.getSectionY();
+    private static boolean checkSubchunkBounds(SectionPos pos, SectionPos center, int bound) {
+        int x = pos.x();
+        int z = pos.z();
+        int y = pos.y();
 
-        int cx = center.getSectionX();
-        int cz = center.getSectionZ();
-        int cy = center.getSectionY();
+        int cx = center.x();
+        int cz = center.z();
+        int cy = center.y();
 
         return x >= cx-bound && x <= cx+bound && z >= cz-bound && z <= cz+bound && y >= cy-bound && y <= cy+bound;
     }
 
     private static boolean hasKnownBeaconInRange(BlockPos pos, int range) {
         double sd = range * range;
-        return knownBeaconPositions.stream().anyMatch(beacon -> beacon.getSquaredDistance(
+        return knownBeaconPositions.stream().anyMatch(beacon -> beacon.distSqr(
                 new Vec3i(pos.getX(), beacon.getY(), pos.getZ())
         ) <= sd);
     }
