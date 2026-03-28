@@ -25,8 +25,8 @@ public class Lump implements ModInitializer {
         ModBlocks.initialize();
         ModItems.initialize();
 
-        PayloadTypeRegistry.playC2S().register(AmethystBeaconLocationsRequest.PACKET_ID, AmethystBeaconLocationsRequest.PACKET_CODEC);
-        PayloadTypeRegistry.playS2C().register(AmethystBeaconLocationsResponse.PACKET_ID, AmethystBeaconLocationsResponse.PACKET_CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(AmethystBeaconLocationsRequest.PACKET_ID, AmethystBeaconLocationsRequest.PACKET_CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(AmethystBeaconLocationsResponse.PACKET_ID, AmethystBeaconLocationsResponse.PACKET_CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(
                 AmethystBeaconLocationsRequest.PACKET_ID,

@@ -4,7 +4,7 @@ import com.github.bdev42.lump.Lump;
 import com.github.bdev42.lump.item.ModItems;
 import com.github.bdev42.lump.networking.AmethystBeaconLocationsRequest;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -61,7 +61,7 @@ public class AmethystGogglesOverlayManager {
         updateOverlayCache(world);
     }
 
-    public static void onRenderEvent(WorldRenderContext context) {
+    public static void onRenderEvent(LevelRenderContext context) {
         if (!overlayEnabled) return;
 
         Profiler.get().push("lumpOverlay");

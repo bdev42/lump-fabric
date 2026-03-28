@@ -1,7 +1,7 @@
 package com.github.bdev42.lump.client.item;
 
 import com.github.bdev42.lump.Lump;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.gizmos.Gizmos;
@@ -28,9 +28,9 @@ public class AmethystGogglesOverlayRenderer {
         return CLR_NEVER_SAFE;
     }
 
-    public static void render(WorldRenderContext context, SectionPos playerSubchunkPos, Map<SectionPos, byte[]> overlayCache) {
-        if (context.worldState() == null) return;
-        Vec3 cam = context.worldState().cameraRenderState.pos;
+    public static void render(LevelRenderContext context, SectionPos playerSubchunkPos, Map<SectionPos, byte[]> overlayCache) {
+        if (context.levelState() == null) return;
+        Vec3 cam = context.levelState().cameraRenderState.pos;
 
         // for each subchunk inside the render bounds, loop through every block and draw overlays where necessary
         SectionPos.cube(playerSubchunkPos, Lump.CONFIG.subchunksRenderMargin()).forEach(subchunk -> {
