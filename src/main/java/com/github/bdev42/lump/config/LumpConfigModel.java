@@ -10,6 +10,8 @@ public class LumpConfigModel {
     @Sync(Option.SyncMode.OVERRIDE_CLIENT)
     @RangeConstraint(min = 1, max = 1024)
     public int beaconProtectionRadius = 128;
+    @Sync(Option.SyncMode.OVERRIDE_CLIENT)
+    public boolean blockPatrols = false;
 
     @SectionHeader("light-overlay")
     // these bounds describe the margin around the player's subchunk in each direction
