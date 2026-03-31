@@ -2,10 +2,10 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.github.bdev42.lump.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "HostileEntitySpawningMixin",
-    "PatrolMonsterSpawningMixin"
+    "MonsterSpawningMixin",
+    "PatrollingMonsterSpawningMixin"
   ],
   "injectors": {
     "defaultRequire": 1

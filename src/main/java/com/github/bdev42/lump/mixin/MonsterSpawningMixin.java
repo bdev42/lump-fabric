@@ -13,16 +13,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
 @Mixin(Monster.class)
-public class HostileEntitySpawningMixin {
+public class MonsterSpawningMixin {
 
     @Inject(method = "isDarkEnoughToSpawn", at = @At("HEAD"), cancellable = true)
-    private static void lump_isSpawnDark(ServerLevelAccessor world, BlockPos pos, RandomSource random, CallbackInfoReturnable<Boolean> cir) {
-        if (!world.dimensionType().hasSkyLight()) return;
+    private static void lump_isSpawnDark(ServerLevelAccessor level, BlockPos pos, RandomSource random, CallbackInfoReturnable<Boolean> cir) {
+        if (!level.dimensionType().hasSkyLight()) return;
 
-        if (!AmethystBeacon.hasAmethystBeaconInRange(world.getLevel(), pos)) return;
+        if (!AmethystBeacon.hasAmethystBeaconInRange(level.getLevel(), pos)) return;
 
-        int ll = world.getBrightness(LightLayer.SKY, pos);
-        if (ll >= 15 || ll > world.dimensionType().monsterSpawnBlockLightLimit()) {
+        int ll = level.getBrightness(LightLayer.SKY, pos);
+        if (ll >= 15 || ll > level.dimensionType().monsterSpawnBlockLightLimit()) {
             cir.setReturnValue(false);
         }
     }
