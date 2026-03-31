@@ -19,7 +19,7 @@ public class PatrolMonsterSpawningMixin {
 
     @Inject(method = "canSpawn", at = @At("HEAD"), cancellable = true)
     private static void lump_canSpawn(EntityType<? extends PatrolEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random, CallbackInfoReturnable<Boolean> cir) {
-        if (!Lump.CONFIG.blockPatrols()) return;
+        if (!Lump.CONFIG.blockPatrols() || spawnReason != SpawnReason.PATROL) return;
         if (!(world instanceof ServerWorldAccess swa)) return;
         if (!AmethystBeacon.hasAmethystBeaconInRange(swa.toServerWorld(), pos)) return;
         cir.setReturnValue(false);
