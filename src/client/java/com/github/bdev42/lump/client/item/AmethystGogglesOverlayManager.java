@@ -12,7 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.profiling.Profiler;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.level.LightLayer;
@@ -110,7 +110,7 @@ public class AmethystGogglesOverlayManager {
             for (short i = 0; i < data.length; i++) {
                 BlockPos pos = subchunk.relativeToBlockPos(i);
 
-                if (SpawnPlacementTypes.ON_GROUND.isSpawnPositionOk(world, pos, EntityType.CREEPER)) data[i] |= F_BLOCK_SPAWNABLE;
+                if (SpawnPlacementTypes.ON_GROUND.isSpawnPositionOk(world, pos, EntityTypes.CREEPER)) data[i] |= F_BLOCK_SPAWNABLE;
 
                 if (world.getBrightness(LightLayer.BLOCK, pos) > monsterSpawnLightLevel) data[i] |= F_BLOCK_LIT;
                 if (hasSkylight && world.getBrightness(LightLayer.SKY, pos) > monsterSpawnLightLevel) data[i] |= F_SKY_LIT;

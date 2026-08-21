@@ -29,7 +29,7 @@ public class ModBlocks {
             .requiresCorrectToolForDrops()
             .mapColor(MapColor.COLOR_PURPLE)
             .sound(SoundType.AMETHYST)
-            .emissiveRendering(Blocks::always)
+            .emissiveRendering(_ -> true)
             .lightLevel(ignored -> 3)
             , 0, Lump.CONFIG.beaconProtectionRadius()
     );
@@ -49,7 +49,7 @@ public class ModBlocks {
 
         ModItems.register(
                 identifier,
-                (p) -> (Item)itemFactory.apply(block, p),
+                (p) -> itemFactory.apply(block, p),
                 properties.useBlockDescriptionPrefix().requiredFeatures(block.requiredFeatures())
         );
         return block;
