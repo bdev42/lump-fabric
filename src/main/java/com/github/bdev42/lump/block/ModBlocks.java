@@ -3,10 +3,11 @@ package com.github.bdev42.lump.block;
 import com.github.bdev42.lump.Lump;
 import com.github.bdev42.lump.item.ModItems;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
-import net.fabricmc.fabric.api.object.builder.v1.world.poi.PoiHelper;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 
+import java.util.HashSet;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -57,7 +59,13 @@ public class ModBlocks {
 
     private static Block registerWithPOI(Identifier identifier, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties settings, int tc, int searchDistance) {
         final Block block = registerBlock(identifier, factory, settings);
-        PoiHelper.register(identifier, tc, searchDistance, block);
+        PoiTypes.register(
+                BuiltInRegistries.POINT_OF_INTEREST_TYPE,
+                ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, identifier),
+                new HashSet<>(block.getStateDefinition().getPossibleStates()),
+                tc,
+                searchDistance
+        );
         return block;
     }
 }
